@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{data.page}}</h2>
+<div class="data_presentation">
+    <p>National Grid ESO is the electricity system operator for Great Britain.<br>
+        They have gathered information of the electricity demand in Great Britain from 2009.<br>
+        The is updated twice an hour, which means 48 entries per day.<br>
+        This makes this dataset ideal for time series forecasting.</p>
+    <img src="../static/uk_flag.png" alt="uk flag">
+</div>
+<p><strong>On this page you can select a duration and display the associated graph, or visualize the effect of certain features on the target.</strong></p>
+<div class="form">
+    <form method="post" action="/duration">
+        <fieldset>
+            <div>
+                <legend>Select a time period:</legend>
+                <p></p>
+                <input type="radio" id="day" name="duration" value="day" checked>
+                <label for="day">Day</label>
+                <input type="radio" id="week" name="duration" value="week">
+                <label for="month">Week</label>
+                <input type="radio" id="month" name="duration" value="month">
+                <label for="month">Month</label>
+                <input type="radio" id="year" name="duration" value="year">
+                <label for="year">Year</label>
+                <input type="radio" id="full" name="duration" value="full">
+                <label for="full">Full dataset (9 years)</label>
+                <p></p>
+            </div>
+            <div>
+                <input type="submit" value="Display the graph">
+            </div>
+        </fieldset>
+    </form>
+    <div class="graph_time_period">
+        <p></p>
+        {% block graph_time_period %}
+        {% endblock %}
+    </div>
+    <p></p>
+    <form method="post" action="/feature">
+        <fieldset>
+            <div>
+                <legend>Select a feature:</legend>
+                <p></p>
+                <input type="radio" id="weekday" name="feature" value="weekday" checked>
+                <label for="weekday">Weekday</label>
+                <input type="radio" id="day" name="feature" value="day">
+                <label for="day">Day</label>
+                <input type="radio" id="month" name="feature" value="month">
+                <label for="month">Month</label>
+                <input type="radio" id="year" name="feature" value="year">
+                <label for="year">Year</label>
+                <input type="radio" id="holiday" name="feature" value="holiday">
+                <label for="holiday">Holiday</label>
+                <p></p>
+            </div>
+            <div>
+                <input type="submit" value="Display the boxplots">
+            </div>
+        </fieldset>
+    </form>
+    <div class="graph_feature">
+        <p></p>
+        {% block graph_feature %}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}
