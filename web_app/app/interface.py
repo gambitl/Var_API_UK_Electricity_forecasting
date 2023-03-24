@@ -5,6 +5,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from typing import Annotated
 
+from dataviz import create_nd_list, plot_time_period, add_html_template_to_graph
+
 #creation of the REST API
 api = FastAPI(title = 'VAR forecasting model deployed on GCP using FastAPI and Docker',
               description = 'web interface powered by FastAPI',
@@ -20,6 +22,7 @@ async def get_index(request : Request):
     """
     Display the home page
     """
+    
     data = {'page':'Home page'}
     return templates.TemplateResponse('index.html', {'request' : request, 'data' : data})
 
@@ -29,6 +32,7 @@ async def dataset(request : Request):
     Use Bokeh to visualize the evolution of the national demand (ND) during a given time period and
     the effect of different features on the target
     """
+    
     data = {'page':'Explore the dataset'}
     return templates.TemplateResponse('dataset.html', {'request' : request, 'data' : data})
 
@@ -37,8 +41,8 @@ async def duration(request : Request, duration: str = Form(...)):
     """
     Display the evolution of the national demand (ND) during a given time period
     """
+    
     data = {'page':'Explore the dataset'}
-    from dataviz import create_nd_list, plot_time_period, add_html_template_to_graph
     list_index, list_nd = create_nd_list(duration)
     plot_time_period(list_index, list_nd)
     add_html_template_to_graph('../templates/graph_time_period.html', 'graph_time_period')
@@ -49,8 +53,8 @@ async def feature(request : Request, feature: str = Form(...)):
     """
     Display the effect of different features on the target (ND)
     """
+    
     data = {'page':'Explore the dataset'}
-    from dataviz import create_nd_list, plot_features_effect, add_html_template_to_graph
     list_index, list_nd = create_nd_list(feature)
     plot_features_effect(list_index, list_nd)
     add_html_template_to_graph('../templates/graph_feature.html', 'graph_feature')
@@ -69,5 +73,6 @@ async def get_about(request : Request):
     """
     Who are we, what is the purpose of this project, where does it come from?
     """
+    
     data = {'page':'About this project'}
     return templates.TemplateResponse('about.html', {'request' : request, 'data' : data})
