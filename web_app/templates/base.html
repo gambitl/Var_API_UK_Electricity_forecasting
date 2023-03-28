@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Web API - {{data.page}}</title>
+        <meta charset="utf-8">
+        <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <nav>
+            <a href="http://localhost:8000/dataset">Explore the dataset</a>
+            <a href="http://localhost:8000/predict">Make predictions</a>
+            <a href="http://localhost:8000/about">About this project</a>
+        </nav>       
+        <header>
+            <a href="http://localhost:8000"><h1>MLOps team project</h1></a>
+            <h2>VAR forecasting model deployed on GCP using FastAPI and Docker</h2>
+        </header>
+        <main>
+            {% block content %}
+            {% endblock %}
+            <p></p>
+            <a class="home" href="http://localhost:8000/">Return to home page</a>
+        </main>
+        <footer>
+            <div class="presentations">
+                <p>Powered by FastAPI, developped by Jérémy, Victor and Julien. Check out our LinkedIn profiles, links below</p> 
+            </div>
+            <div class="linkedin">
+                <a href="https://www.linkedin.com/in/jeremy-lavergne/" target="_blank">Jérémy</a>
+                <a href="https://www.linkedin.com/in/julien-prost-360aab107/" target="_blank">Julien</a>
+                <a href="https://www.linkedin.com/in/victor-distefano/" target="_blank">Victor</a>
+            </div>
+        </footer>
+    </body>
+</html>
