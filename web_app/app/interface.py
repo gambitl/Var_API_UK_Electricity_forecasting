@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from typing import Annotated
 
-from dataviz import create_nd_list, plot_time_period, add_html_template_to_graph
+from dataviz import create_nd_list, plot_time_period, add_html_template_to_graph, plot_features_effect
 
 #creation of the REST API
 api = FastAPI(title = 'VAR forecasting model deployed on GCP using FastAPI and Docker',
@@ -55,8 +55,7 @@ async def feature(request : Request, feature: str = Form(...)):
     """
     
     data = {'page':'Explore the dataset'}
-    list_index, list_nd = create_nd_list(feature)
-    plot_features_effect(list_index, list_nd)
+    plot_features_effect(feature)
     add_html_template_to_graph('../templates/graph_feature.html', 'graph_feature')
     return templates.TemplateResponse('graph_feature.html', {'request':request, 'data' : data})
 
