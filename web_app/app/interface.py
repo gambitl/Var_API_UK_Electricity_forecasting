@@ -65,6 +65,8 @@ async def get_about(request : Request):
     """
     Tune the model, visualize the predictions and analyze the metrics, export a PDF of the results
     """
+
+
     data = {'page':'Make predictions'}
     return templates.TemplateResponse('predict.html', {'request' : request, 'data' : data})
 
