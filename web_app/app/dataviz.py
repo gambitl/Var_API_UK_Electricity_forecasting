@@ -48,7 +48,7 @@ def plot_time_period(list_index, list_nd):
     save(p)
 
 #Add the Jinja2 HTML template blocks inside the HTML graph document
-def add_html_template_to_graph(path, graph):
+def add_html_template_to_graph_dataset(path, graph):
     #open the file and add the requested templates at the begining
     with open (path, 'r+') as file :
         read_content = file.read()
