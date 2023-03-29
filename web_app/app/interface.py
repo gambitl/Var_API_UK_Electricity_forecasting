@@ -55,7 +55,7 @@ async def duration(request: Request, duration: str = Form(...)):
 
     data = {'page': 'Explore the dataset'}
     list_index, list_nd = create_nd_list(duration)
-    plot_time_period(list_index, list_nd)
+    plot_time_period(list_index, list_nd, duration)
     add_html_template_to_graph_dataset('../templates/graph_time_period.html', 'graph_time_period')
     return templates.TemplateResponse('graph_time_period.html', {'request': request, 'data': data})
 

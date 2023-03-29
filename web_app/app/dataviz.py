@@ -1,6 +1,7 @@
 import pandas as pd
 from bokeh.plotting import figure, output_file, save
 from bokeh.layouts import gridplot, row
+from bokeh.models import Range1d
 
 #Creation and formatting of the DataFrame
 df = pd.read_csv('../database/database.csv')
@@ -41,9 +42,9 @@ def create_nd_list(duration):
     return (list_index, list_nd)
 
 #Plot the evolution of ND during the selected time period using Bokeh
-def plot_time_period(list_index, list_nd):
+def plot_time_period(list_index, list_nd, duration):
     output_file(filename = "../templates/graph_time_period.html", title = "Static HTML file")
-    p = figure(sizing_mode="stretch_width", max_width=9000, height=500)
+    p = figure(sizing_mode="stretch_width", max_width=9000, height=500, title=duration)
     line = p.line(list_index, list_nd)
     save(p)
 
@@ -82,19 +83,19 @@ def plot_features_effect(feature):
         stats[i]=values
     #create the boxplots
     figures={}
-    weekdays=['monday','tuesday','wednesday','thursday','friday','saterday','sunday']
-    months=['january','february','march','april','may','june','july','august','september','october','november','december']
+    weekdays=['mon','tue','wed','thu','fri','sat','sun']
+    months=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
     holidays=['no','yes']
     for i in groups:
         k=str(i)
         if feature == 'weekday':
-            figures[i]= figure(tools="save", x_range= [k], title=weekdays[i], plot_width=120, plot_height=500)
+            figures[i]= figure(tools="save", x_range= [k], title=weekdays[i], plot_width=100, plot_height=500)
         elif feature == 'month':
-            figures[i]= figure(tools="save", x_range= [k], title=months[i-1], plot_width=120, plot_height=500)
+            figures[i]= figure(tools="save", x_range= [k], title=months[i-1], plot_width=100, plot_height=500)
         elif feature == 'is_holiday':
-            figures[i]= figure(tools="save", x_range= [k], title=holidays[i], plot_width=120, plot_height=500)
+            figures[i]= figure(tools="save", x_range= [k], title=holidays[i], plot_width=100, plot_height=500)
         else :
-            figures[i]= figure(tools="save", x_range= [k], title=str(i), plot_width=120, plot_height=500)
+            figures[i]= figure(tools="save", x_range= [k], title=str(i), plot_width=100, plot_height=500)
         upper = min(stats[i]['qmax'], stats[i]['upper'])
         lower = max(stats[i]['qmin'], stats[i]['lower'])    
         hbar_height = (stats[i]['qmax'] - stats[i]['qmin']) / 500    
@@ -103,7 +104,8 @@ def plot_features_effect(feature):
         figures[i].vbar([k], 0.7, stats[i]['q2'], stats[i]['q3'], line_color="black")
         figures[i].vbar([k], 0.7, stats[i]['q1'], stats[i]['q2'], line_color="black")   
         figures[i].rect([k], lower, 0.2, hbar_height, line_color="black")
-        figures[i].rect([k], upper, 0.2, hbar_height, line_color="black")    
+        figures[i].rect([k], upper, 0.2, hbar_height, line_color="black") 
+        figures[i].y_range = Range1d(0, 60000)   
         if not stats[i]['out'].empty:
             figures[i].circle([k] * len(stats[i]['outlier']), stats[i]['outlier'], size=6, fill_alpha=0.6)
     list_figures=[]
