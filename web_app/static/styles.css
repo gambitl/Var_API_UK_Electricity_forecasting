@@ -29,7 +29,7 @@ nav a:hover {
 }
 
 header {
-    height: 150px;
+    height: 200px;
     background-color: #BAD7E9;
     color:white;
     display:flex;
@@ -74,8 +74,8 @@ main {
     width:200px;
 }
 
-.graph {
-    margin: auto;
+.graph_feature {
+    overflow:scroll;
 }
 
 .about {

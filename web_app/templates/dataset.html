@@ -4,13 +4,13 @@
 <div class="data_presentation">
     <p>National Grid ESO is the electricity system operator for Great Britain.<br>
         They have gathered information of the electricity demand in Great Britain from 2009.<br>
-        The is updated twice an hour, which means 48 entries per day.<br>
+        The dataset is updated twice an hour, which means 48 entries per day.<br>
         This makes this dataset ideal for time series forecasting.</p>
     <img src="../static/uk_flag.png" alt="uk flag">
 </div>
-<p><strong>On this page you can select a duration and display the associated graph, or visualize the effect of certain features on the target.</strong></p>
+<p><strong>On this page you can select a duration and display the associated graph, or visualize the effect of certain features on the target (national demand).</strong></p>
 <div class="form">
-    <form method="post" action="/duration">
+    <form method="post" action="/dataviz/duration">
         <fieldset>
             <div>
                 <legend>Select a time period:</legend>
@@ -38,7 +38,7 @@
         {% endblock %}
     </div>
     <p></p>
-    <form method="post" action="/feature">
+    <form method="post" action="/dataviz/feature">
         <fieldset>
             <div>
                 <legend>Select a feature:</legend>
@@ -51,7 +51,7 @@
                 <label for="month">Month</label>
                 <input type="radio" id="year" name="feature" value="year">
                 <label for="year">Year</label>
-                <input type="radio" id="holiday" name="feature" value="holiday">
+                <input type="radio" id="holiday" name="feature" value="is_holiday">
                 <label for="holiday">Holiday</label>
                 <p></p>
             </div>
