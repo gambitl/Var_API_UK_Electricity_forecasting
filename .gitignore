@@ -1,3 +1,5 @@
-web_app/templates/graph_time_period.html
-web_app/templates/graph_feature.html
+web_app/app/templates/graph_time_period.html
+web_app/app/templates/graph_feature.html
+web_app/app/templates/graph_predictions.html
 web_app/app/__pycache__
+web_app/app/dataviz/__pycache__
