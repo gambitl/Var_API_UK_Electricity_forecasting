@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from app.dataviz import dataviz_page
 from app.predict import predict_page
 from app.about import about_page
-
+import uvicorn, os
 # creation of the REST API
 api = FastAPI(title='VAR forecasting model deployed on GCP using FastAPI and Docker',
               description='web interface powered by FastAPI',
@@ -51,3 +51,7 @@ About page
 """
 
 api.include_router(about_page.router)
+
+
+if __name__ == "__main__":
+    uvicorn.run(api, port=int(os.environ.get("PORT", 8080)), host="0.0.0.0")
