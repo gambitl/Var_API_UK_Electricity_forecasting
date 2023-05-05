@@ -3,9 +3,9 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from dataviz import dataviz_page
-from predict import predict_page
-from about import about_page
+from app.dataviz import dataviz_page
+from app.predict import predict_page
+from app.about import about_page
 
 # creation of the REST API
 api = FastAPI(title='VAR forecasting model deployed on GCP using FastAPI and Docker',
@@ -13,8 +13,8 @@ api = FastAPI(title='VAR forecasting model deployed on GCP using FastAPI and Doc
               version='1.0.0')
 
 # HTML templates and CSS files
-templates = Jinja2Templates(directory='../templates')
-api.mount('/static', StaticFiles(directory='../static'), name='static')
+templates = Jinja2Templates(directory='./templates')
+api.mount('/static', StaticFiles(directory='./static'), name='static')
 
 
 # routes
