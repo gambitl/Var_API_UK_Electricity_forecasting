@@ -6,11 +6,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from bokeh.plotting import figure, output_file, save
 from bokeh.layouts import gridplot, row
+import os
 
-name = '../saved_models/modele_var_projet_mle_21032023.pkl'
-model = joblib.load(name)
+current_directory = os.getcwd()
+relative_path_model = "saved_models/modele_var_projet_mle_21032023.pkl"
+full_path_model = os.path.join(current_directory, relative_path_model)
+relative_path_df = "database/database.csv"
+full_path_df = os.path.join(current_directory, relative_path_df)
+
+model = joblib.load(full_path_model)
 # %%
-df = pd.read_csv('../database/database.csv')
+df = pd.read_csv(full_path_df)
 df['settlement_date'] = pd.to_datetime(df['settlement_date'])
 df = df.set_index('settlement_date')
 df = df.drop(['settlement_period', 'period_hour', 'embedded_solar_capacity', 'is_holiday', 'embedded_wind_capacity',

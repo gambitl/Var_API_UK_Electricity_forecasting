@@ -2,9 +2,14 @@ import pandas as pd
 from bokeh.plotting import figure, output_file, save
 from bokeh.layouts import gridplot, row
 from bokeh.models import Range1d
+import os
+
+current_directory = os.getcwd()
+relative_path_df = "database/database.csv"
+full_path_df = os.path.join(current_directory, relative_path_df)
 
 #Creation and formatting of the DataFrame
-df = pd.read_csv('../database/database.csv')
+df = pd.read_csv(full_path_df)
 weekday=pd.to_datetime(df['settlement_date']).dt.weekday
 day=pd.to_datetime(df['settlement_date']).dt.day
 month=pd.to_datetime(df['settlement_date']).dt.month
