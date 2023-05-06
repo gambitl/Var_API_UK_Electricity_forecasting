@@ -13,17 +13,18 @@ relative_path_model = "saved_models/modele_var_projet_mle_21032023.pkl"
 full_path_model = os.path.join(current_directory, relative_path_model)
 relative_path_df = "database/database.csv"
 full_path_df = os.path.join(current_directory, relative_path_df)
+relative_path_static = "templates/static"
+full_path_static = os.path.join(current_directory, relative_path_static)
+relative_path_template = "templates"
+full_path_template = os.path.join(current_directory, relative_path_template)
 
 model = joblib.load(full_path_model)
-# %%
 df = pd.read_csv(full_path_df)
 df['settlement_date'] = pd.to_datetime(df['settlement_date'])
 df = df.set_index('settlement_date')
 df = df.drop(['settlement_period', 'period_hour', 'embedded_solar_capacity', 'is_holiday', 'embedded_wind_capacity',
               'non_bm_stor'], axis=1)
-# %%
 df_1 = df.diff().dropna()
-# %%
 lag_order = model.lag_order = model.k_ar
 
 
@@ -83,12 +84,13 @@ def plot_predict(df_predicted):
     # plt.legend(fontsize=36)
     # plt.tight_layout()
     # plt.show()
-    output_file(filename="../templates/graph_predictions.html", title="Static HTML file")
+    output_file(filename=full_path_template+"/graph_predictions.html", title="Static HTML file")
     p = figure(sizing_mode="stretch_width", max_width=9000, height=500)
     index = df_predicted.index
     nd = df_predicted['nd_forecast']
     line = p.line(index, nd)
     save(p)
+    
 def add_html_template_to_graph_predict(path, graph):
     #open the file and add the requested templates at the begining
     with open(path, 'r+') as file :

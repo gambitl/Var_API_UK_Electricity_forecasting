@@ -7,6 +7,8 @@ import os
 current_directory = os.getcwd()
 relative_path_df = "database/database.csv"
 full_path_df = os.path.join(current_directory, relative_path_df)
+relative_path_template = "templates"
+full_path_template = os.path.join(current_directory, relative_path_template)
 
 #Creation and formatting of the DataFrame
 df = pd.read_csv(full_path_df)
@@ -48,7 +50,7 @@ def create_nd_list(duration):
 
 #Plot the evolution of ND during the selected time period using Bokeh
 def plot_time_period(list_index, list_nd, duration):
-    output_file(filename ="../templates/graph_time_period.html", title ="Static HTML file")
+    output_file(filename =full_path_template+"/graph_time_period.html", title ="Static HTML file")
     p = figure(sizing_mode="stretch_width", max_width=9000, height=500, title=duration)
     line = p.line(list_index, list_nd)
     save(p)
@@ -117,7 +119,7 @@ def plot_features_effect(feature):
     for i in figures:
         list_figures.append(figures[i])
     #save the boxplots in a html file
-    output_file(filename ="../../templates/graph_feature.html", title ="Static HTML file")
+    output_file(filename =full_path_template+"/graph_feature.html", title ="Static HTML file")
     save(row(list_figures))
 
      #"unexpected attribute 'plot_width' to figure, similar attributes are outer_width, width or min_width"

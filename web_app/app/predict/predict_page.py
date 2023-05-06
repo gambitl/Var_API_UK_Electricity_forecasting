@@ -8,7 +8,7 @@ import os
 from .predict_functions import add_html_template_to_graph_predict, inv_diff_pred, make_prediction, plot_predict
 
 current_directory = os.getcwd()
-relative_path_static = "static"
+relative_path_static = "templates/static"
 full_path_static = os.path.join(current_directory, relative_path_static)
 relative_path_template = "templates"
 full_path_template = os.path.join(current_directory, relative_path_template)

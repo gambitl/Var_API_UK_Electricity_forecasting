@@ -12,9 +12,15 @@ api = FastAPI(title='VAR forecasting model deployed on GCP using FastAPI and Doc
               description='web interface powered by FastAPI',
               version='1.0.0')
 
+current_directory = os.getcwd()
+relative_path_static = "templates/static"
+full_path_static = os.path.join(current_directory, relative_path_static)
+relative_path_template = "templates"
+full_path_template = os.path.join(current_directory, relative_path_template)
+
 # HTML templates and CSS files
-templates = Jinja2Templates(directory='./templates')
-api.mount('/static', StaticFiles(directory='./static'), name='static')
+templates = Jinja2Templates(directory=full_path_template)
+api.mount('/static', StaticFiles(directory=full_path_static), name='static')
 
 
 # routes

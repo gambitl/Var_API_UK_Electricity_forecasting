@@ -9,7 +9,7 @@ from .dataviz_functions import create_nd_list, plot_time_period, add_html_templa
 
 
 current_directory = os.getcwd()
-relative_path_static = "static"
+relative_path_static = "templates/static"
 full_path_static = os.path.join(current_directory, relative_path_static)
 relative_path_template = "templates"
 full_path_template = os.path.join(current_directory, relative_path_template)
