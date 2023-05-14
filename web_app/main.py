@@ -61,7 +61,7 @@ api.include_router(about_page.router)
 
 if __name__ == "__main__":
     #la ligne suivante doit être décommentée pour passer sur le cloud
-    uvicorn.run(api, port=int(os.environ.get("PORT", 8080)), host="0.0.0.0")
+    #uvicorn.run(api, port=int(os.environ.get("PORT", 8080)), host="0.0.0.0")
 
     #la ligne suivante doit être décommentée pour testé en local
-    #uvicorn.run(api)
+    uvicorn.run(api)

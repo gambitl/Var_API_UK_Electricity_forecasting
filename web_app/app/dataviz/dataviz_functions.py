@@ -3,15 +3,29 @@ from bokeh.plotting import figure, output_file, save
 from bokeh.layouts import gridplot, row
 from bokeh.models import Range1d
 import os
+import gcsfs
+
+#defining the gcp path
+gcs = gcsfs.GCSFileSystem(project='formation-mle-dev')
+artefacts_bucket = 'dataset-projet-mle-var-forecasting'
+folder_data = 'data_for_training_and_predict'
+folder_model = 'models'
+gs_path = 'gs://'
+bucket_name = artefacts_bucket
 
 current_directory = os.getcwd()
-relative_path_df = "database/database.csv"
-full_path_df = os.path.join(current_directory, relative_path_df)
+
+#df on GCS path
+nom_df = 'historic_demand_2009_2023_noNaN.csv'
+path_df = os.path.join(gs_path,bucket_name, folder_data, nom_df).replace('\\','/')
+
 relative_path_template = "templates"
 full_path_template = os.path.join(current_directory, relative_path_template)
 
 #Creation and formatting of the DataFrame
-df = pd.read_csv(full_path_df)
+df = pd.read_csv(path_df)
+
+
 weekday=pd.to_datetime(df['settlement_date']).dt.weekday
 day=pd.to_datetime(df['settlement_date']).dt.day
 month=pd.to_datetime(df['settlement_date']).dt.month
