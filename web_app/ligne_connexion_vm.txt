@@ -1,0 +1,1 @@
+mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri postgresql://mlflow-postgres-database:postgres-datascientest-var@127.0.0.1:5432/mlfflow_db --default-artifact-root gs://mlflow-storage-artifacts-var-project
