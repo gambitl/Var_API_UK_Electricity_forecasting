@@ -1,0 +1,131 @@
+
+    ENDPOINT TEST
+    test_date = 2023/05/26 11:11:59
+
+    request done at "/"
+    expected_result = 200
+    actual_result = 200
+
+    => SUCCESS
+
+    ==============================
+    
+    ENDPOINT TEST
+    test_date = 2023/05/26 11:11:59
+
+    request done at "/dataset"
+    expected_result = 200
+    actual_result = 200
+
+    => SUCCESS
+
+    ==============================
+    
+    ENDPOINT TEST
+    test_date = 2023/05/26 11:11:59
+
+    request done at "/predict"
+    expected_result = 200
+    actual_result = 200
+
+    => SUCCESS
+
+    ==============================
+    
+    ENDPOINT TEST
+    test_date = 2023/05/26 11:11:59
+
+    request done at "/about"
+    expected_result = 200
+    actual_result = 200
+
+    => SUCCESS
+
+    ==============================
+    
+    DATASET STATISTICAL TEST
+    test_date = 2023/05/26 11:11:59
+
+    Control of nd_mean variation
+    old_value = 31891.71
+    new_value = 31891.71
+    expected_variation = +/- 10.0%
+    actual_result = 0.0%
+
+    => SUCCESS
+
+    ==============================
+    
+    DATASET STATISTICAL TEST
+    test_date = 2023/05/26 11:11:59
+
+    Control of nd_median variation
+    old_value = 31327.0
+    new_value = 31327.0
+    expected_variation = +/- 10.0%
+    actual_result = 0.0%
+
+    => SUCCESS
+
+    ==============================
+    
+    DATASET STATISTICAL TEST
+    test_date = 2023/05/26 11:11:59
+
+    Control of nd_min variation
+    old_value = 13367
+    new_value = 13367
+    expected_variation = +/- 10.0%
+    actual_result = 0.0%
+
+    => SUCCESS
+
+    ==============================
+    
+    DATASET STATISTICAL TEST
+    test_date = 2023/05/26 11:11:59
+
+    Control of nd_max variation
+    old_value = 59095
+    new_value = 59095
+    expected_variation = +/- 10.0%
+    actual_result = 0.0%
+
+    => SUCCESS
+
+    ==============================
+    
+    DATASET STATISTICAL TEST
+    test_date = 2023/05/26 11:11:59
+
+    Control of nd_std variation
+    old_value = 7792.02
+    new_value = 7792.02
+    expected_variation = +/- 10.0%
+    actual_result = 0.0%
+
+    => SUCCESS
+
+    ==============================
+    
+    DATASET QUALITY TEST
+    test_date = 2023/05/26 11:11:59
+
+    Control of missing values
+    expected_result = list of 0
+    actual_result = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+    => SUCCESS
+
+    ==============================
+
+    DATASET QUALITY TEST
+    test_date = 2023/05/26 11:11:59
+
+    Control of duplicated values
+    expected_result = 0
+    actual_result = 0
+
+    => SUCCESS
+
+    ==============================
