@@ -1,5 +1,3 @@
-
-# %%
 import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
@@ -8,6 +6,8 @@ from bokeh.plotting import figure, output_file, save
 from bokeh.layouts import gridplot, row
 import os
 import gcsfs
+import mlflow
+from mlflow.entities import ViewType
 
 #defining the gcp path
 gcs = gcsfs.GCSFileSystem(project='formation-mle-dev')
@@ -18,21 +18,41 @@ gs_path = 'gs://'
 bucket_name = artefacts_bucket
 
 current_directory = os.getcwd()
-#saved model path
-nom_model = 'modele_var_projet_mle_21032023.pkl'
-model_path = os.path.join(gs_path,bucket_name, folder_model, nom_model).replace('\\','/')
 
 #df on GCS path
 nom_df = 'historic_demand_2009_2023_noNaN.csv'
 path_df = os.path.join(gs_path,bucket_name, folder_data, nom_df).replace('\\','/')
-
+#template path
 relative_path_static = "templates/static"
 full_path_static = os.path.join(current_directory, relative_path_static)
-
 relative_path_template = "templates"
 full_path_template = os.path.join(current_directory, relative_path_template)
 
-model = pd.read_pickle(model_path)
+#setting the mlflow params so we can get the best model to date :D
+os.environ["GCLOUD_PROJECT"] = "formation-mle-dev"
+tracking_server_host = "34.163.234.198"
+mlflow.set_tracking_uri(f"http://{tracking_server_host}:5000")
+mlflow.set_registry_uri('gs://mlflow-storage-artifacts-var-project')
+mlflow.set_experiment("var_test_airflow")
+experiment_name = "var_test_airflow"
+
+if mlflow.get_experiment_by_name(experiment_name) is None:
+    experiment_id=mlflow.create_experiment(experiment_name)
+else:
+    current_experiment=dict(mlflow.get_experiment_by_name(experiment_name))
+    experiment_id=current_experiment['experiment_id']
+#best run according to MAE metric
+best_run = mlflow.search_runs(
+    experiment_ids=experiment_id,
+    filter_string="",
+    run_view_type=ViewType.ACTIVE_ONLY,
+    max_results=1,
+    order_by=["metrics.MAE DESC"],
+    output_format = 'pandas',
+)
+
+logged_model = os.path.join('runs:', best_run['run_id'][0], 'model' ).replace("\\","/")
+model = mlflow.statsmodels.load_model(logged_model)
 df = pd.read_csv(path_df)
 df['settlement_date'] = pd.to_datetime(df['settlement_date'])
 df = df.set_index('settlement_date')
