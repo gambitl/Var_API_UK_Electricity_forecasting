@@ -1,50 +1,62 @@
-# 📈 Projet de prédiction du prix du cours du gaz naturel au Royaume-Uni
+# 📈 UK Natural Gas Price Prediction Project
 
-Ce projet se focalise sur la mise en production d'un modèle de séries temporelles multivarié visant à prédire le prix du cours du gaz naturel au Royaume-Uni. Le modèle est réalisé en utilisant la librairie `statsmodels`.
+- [Project Overview](#-project-overview)
+- [Architecture](#architecture)
+- [Pipeline Testing](#pipeline-testing)
+- [Configuration and Deployment](#configuration-and-deployment)
+- [Application Link](#application-link)
+- [Documentation](#documentation)
 
-**Attention** : à date, l'application souffre d'un problème d'affichage d'images et de styling css (28/05/2023).
-Vous pouvez tester le styling en exécutant le code en local :
-    1. Rendez-vous dans le fichier main.py dans le dossier web_app
-    2. Lancez le proxy online via SSH (voir config & déploiement, point 5)
-    3. Modifiez la toute dernière ligne
+## Project Overview
+
+This project focuses on deploying a multivariate time series model for predicting the price of natural gas in the UK. The model is built using the `statsmodels` library.
+
+**Note**: As of now, the application has issues with image display and CSS styling (28/05/2023).
+You can test the styling by running the code locally:
+   1. Go to the `main.py` file in the `web_app` directory.
+   2. Launch the online proxy via SSH (see configuration & deployment, point 5).
+   3. Modify the very last line.
+
 ## Architecture
 
-Le projet est mis en production sur Google Cloud Platform (GCP) en utilisant les services suivants :
+The project is deployed on Google Cloud Platform (GCP) using the following services:
 
-1. 📂 **Google Cloud Storage** : les données d'entraînement sont stockées dans un bucket Google Cloud Storage dédié.
-2. 🐳 **API et container Docker** : le modèle est rendu accessible au public via une API hébergée dans un container Docker. Il expose une page HTML.
-3. 🔨 **Google Cloud Build** : intégration continue et déploiement du container Docker grâce à Google Cloud Build.
-4. ☁️ **Google Cloud Run** : déploiement du container Docker sur Google Cloud Run, permettant d'exécuter l'API.
-5. 🎛️ **Google Cloud Composer** : le fichier Python du DAG Airflow, situé dans le dossier "dag_airflow" du projet, est utilisé pour ré-entraîner le modèle toutes les heures. Le DAG s'exécute sur la brique Google Cloud Composer.
-6. 📊 **MLFlow** : toutes les métriques d'entraînement et les artefacts, tels que le modèle, sont sauvegardés et historisés en utilisant la librairie Python MLFlow. Les données de MLFlow sont stockées dans un autre bucket Google Cloud Storage dédié.
-7. 🗄️ **PostgreSQL** : les données de MLFlow sont également sauvegardées dans une base de données PostgreSQL.
-8. 💻 **Google Cloud Compute Engine** : la brique MLFlow s'exécute sur une machine virtuelle créée à l'aide de Google Cloud Compute Engine.
+1. 📂 **Google Cloud Storage**: Training data is stored in a dedicated Google Cloud Storage bucket.
+2. 🐳 **API and Docker Container**: The model is made publicly accessible through an API hosted in a Docker container. It exposes an HTML page.
+3. 🔨 **Google Cloud Build**: Continuous integration and deployment of the Docker container using Google Cloud Build.
+4. ☁️ **Google Cloud Run**: Deployment of the Docker container on Google Cloud Run, allowing the execution of the API.
+5. 🎛️ **Google Cloud Composer**: The Python DAG file located in the "dag_airflow" directory of the project is used to retrain the model every hour. The DAG runs on the Google Cloud Composer component.
+6. 📊 **MLFlow**: Training metrics and artifacts, such as the model, are logged and stored using the MLFlow Python library. MLFlow data is stored in another dedicated Google Cloud Storage bucket.
+7. 🗄️ **PostgreSQL**: MLFlow data is also backed up in a PostgreSQL database.
+8. 💻 **Google Cloud Compute Engine**: The MLFlow component runs on a virtual machine created using Google Cloud Compute Engine.
 
-## Tests de la pipeline
+## Pipeline Testing
 
-La pipeline est rigoureusement testée pour assurer la qualité des prédictions et des données utilisées, en se concentrant sur les aspects suivants :
+The pipeline undergoes rigorous testing to ensure the quality of predictions and data used, focusing on the following aspects:
 
-1. 📝 **Tests des requêtes API** : les terminaisons des requêtes API sont testées pour s'assurer de la disponibilité et de la fiabilité de l'API.
-2. 📊 **Tests des données statistiques du jeu d'entraînement** : les données d'entraînement sont soumises à des tests statistiques pour vérifier leur cohérence et leur adéquation aux prédictions.
-3. 🧪 **Tests de qualité des données** : des tests de qualité sont effectués sur les données utilisées, tels que des contrôles de validité, de complétude et de cohérence.
-   
-**Le fichier de test se trouve dans le dossier 'test'**
+1. 📝 **API Request Testing**: API request endpoints are tested to ensure availability and reliability of the API.
+2. 📊 **Training Data Statistical Testing**: Training data is subjected to statistical tests to verify its consistency and suitability for predictions.
+3. 🧪 **Data Quality Testing**: Quality tests are performed on the data used, such as validity, completeness, and consistency checks.
 
-## Configuration et déploiement
+**The test file is located in the 'test' directory.**
 
-1. 🚀 Créez un projet sur Google Cloud Platform et configurez les services nécessaires, tels que Google Cloud Build, Google Cloud Run et Google Cloud Composer.
-2. 📦 Créez les buckets Google Cloud Storage nécessaires, l'un pour stocker les données d'entraînement et l'autre pour sauvegarder les sorties de MLFlow. Mettez à jour les chemins correspondants dans le code.
-3. ⚙️ Configurez les paramètres spécifiques du projet, tels que les identifiants d'accès à GCP, les chemins vers les données d'entraînement, etc.
-4. 🖥️ Créez une machine virtuelle sur Google Cloud Compute Engine et configurez l'environnement MLFlow.
-5. 🗃️ Créez une base de données PostgreSQL pour stocker les données de MLFlow et configurez les paramètres de connexion dans le code. Exécutez les deux commandes suivantes pour créer un proxy entre la base et la VM, puis créer un pont :
-   1. ./cloud-sql-proxy --private-ip *nom-du-projet*:*nom-de-la-bdd*
-   2. mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri postgresql://*nom-de-l'instance-postgre*:*mot-de-passe-de-linstance*@*adresse-sur-laquelle-ecoute-le-proxy*:5432/*nom-de-la-bdd* --default-artifact-root gs://*nom-bucket-storageartifact*
-6. 🔄 Mettez en place le DAG Airflow en important dans l'interface de Composer le fichier Python du DAG situé dans le dossier "dag_airflow" du projet.
-7. 🚢 Construisez le container Docker grâce à la brique Google Cloud Build (vous pouvez configurez une CI automatique en liant votre repo GIT comme nous l'avons fait) et déployez-le sur Google Cloud Run.
+## Configuration and Deployment
 
-## Lien de l'application
+1. 🚀 Create a project on Google Cloud Platform and set up the necessary services such as Google Cloud Build, Google Cloud Run, and Google Cloud Composer.
+2. 📦 Create the necessary Google Cloud Storage buckets, one for storing the training data and another for backing up MLFlow outputs. Update the corresponding paths in the code.
+3. ⚙️ Configure project-specific parameters such as GCP access credentials, paths to training data, etc.
+4. 🖥️ Create a virtual machine on Google Cloud Compute Engine and set up the MLFlow environment.
+5. 🗃️ Create a PostgreSQL database to store MLFlow data and configure connection parameters in the code. Run the following two commands to create a proxy between the database and the VM, and then create a bridge:
+   1. ./cloud-sql-proxy --private-ip *project-name*:*db-name*
+   2. mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri postgresql://*instance-name*:*instance-password*@*proxy-listening-address*:5432/*db-name* --default-artifact-root gs://*artifact-storage-bucket-name*
+6. 🔄 Set up the Airflow DAG by importing the Python DAG file located in the "dag_airflow" directory of the project through the Composer interface.
+7. 🚢 Build the Docker container using Google Cloud Build (you can set up automatic CI by linking your GIT repo as we did) and deploy it on Google Cloud Run.
 
-**Notre application est disponible ici** : https://test-api-one-shot-vilcobbika-od.a.run.app/
+## Application Link
+
+**Our application is available here**: https://test-api-one-shot-vilcobbika-od.a.run.app/
+
 ## Documentation
 
-La documentation détaillée sur la construction des différents services cloud et les démarches à suivre se trouve dans le dossier `docs` du projet. 📚
+Detailed documentation on setting up various cloud services and the steps to follow can be found in the `docs` folder of the project. 📚
+
