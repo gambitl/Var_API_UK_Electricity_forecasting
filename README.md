@@ -1,4 +1,4 @@
-# 📈 UK Natural Gas Price Prediction Project
+# 📈 UK Electricity Price Prediction Project
 
 - [Project Overview](#-project-overview)
 - [Architecture](#architecture)
@@ -9,7 +9,7 @@
 
 ## Project Overview
 
-This project focuses on deploying a multivariate time series model for predicting the price of natural gas in the UK. The model is built using the `statsmodels` library.
+This project focuses on deploying a multivariate time series model for predicting the price of electricity in the UK. The model is built using the `statsmodels` library.
 
 **Note**: As of now, the application has issues with image display and CSS styling (28/05/2023).
 You can test the styling by running the code locally:
