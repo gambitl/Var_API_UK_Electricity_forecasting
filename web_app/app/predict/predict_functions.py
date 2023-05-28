@@ -1,23 +1,64 @@
-
-# %%
 import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
 from bokeh.plotting import figure, output_file, save
 from bokeh.layouts import gridplot, row
+import os
+import gcsfs
+import mlflow
+from mlflow.entities import ViewType
 
-name = '../saved_models/modele_var_projet_mle_21032023.pkl'
-model = joblib.load(name)
-# %%
-df = pd.read_csv('../database/database.csv')
+#defining the gcp path
+gcs = gcsfs.GCSFileSystem(project='formation-mle-dev')
+artefacts_bucket = 'dataset-projet-mle-var-forecasting'
+folder_data = 'data_for_training_and_predict'
+folder_model = 'models'
+gs_path = 'gs://'
+bucket_name = artefacts_bucket
+
+current_directory = os.getcwd()
+
+#df on GCS path
+nom_df = 'historic_demand_2009_2023_noNaN.csv'
+path_df = os.path.join(gs_path,bucket_name, folder_data, nom_df).replace('\\','/')
+#template path
+relative_path_static = "templates/static"
+full_path_static = os.path.join(current_directory, relative_path_static)
+relative_path_template = "templates"
+full_path_template = os.path.join(current_directory, relative_path_template)
+
+#setting the mlflow params so we can get the best model to date :D
+os.environ["GCLOUD_PROJECT"] = "formation-mle-dev"
+tracking_server_host = "34.163.234.198"
+mlflow.set_tracking_uri(f"http://{tracking_server_host}:5000")
+mlflow.set_registry_uri('gs://mlflow-storage-artifacts-var-project')
+mlflow.set_experiment("var_test_airflow")
+experiment_name = "var_test_airflow"
+
+if mlflow.get_experiment_by_name(experiment_name) is None:
+    experiment_id=mlflow.create_experiment(experiment_name)
+else:
+    current_experiment=dict(mlflow.get_experiment_by_name(experiment_name))
+    experiment_id=current_experiment['experiment_id']
+#best run according to MAE metric
+best_run = mlflow.search_runs(
+    experiment_ids=experiment_id,
+    filter_string="",
+    run_view_type=ViewType.ACTIVE_ONLY,
+    max_results=1,
+    order_by=["metrics.MAE DESC"],
+    output_format = 'pandas',
+)
+
+logged_model = os.path.join('runs:', best_run['run_id'][0], 'model' ).replace("\\","/")
+model = mlflow.statsmodels.load_model(logged_model)
+df = pd.read_csv(path_df)
 df['settlement_date'] = pd.to_datetime(df['settlement_date'])
 df = df.set_index('settlement_date')
 df = df.drop(['settlement_period', 'period_hour', 'embedded_solar_capacity', 'is_holiday', 'embedded_wind_capacity',
               'non_bm_stor'], axis=1)
-# %%
 df_1 = df.diff().dropna()
-# %%
 lag_order = model.lag_order = model.k_ar
 
 
@@ -77,12 +118,13 @@ def plot_predict(df_predicted):
     # plt.legend(fontsize=36)
     # plt.tight_layout()
     # plt.show()
-    output_file(filename="../templates/graph_predictions.html", title="Static HTML file")
+    output_file(filename=full_path_template+"/graph_predictions.html", title="Static HTML file")
     p = figure(sizing_mode="stretch_width", max_width=9000, height=500)
     index = df_predicted.index
     nd = df_predicted['nd_forecast']
     line = p.line(index, nd)
     save(p)
+    
 def add_html_template_to_graph_predict(path, graph):
     #open the file and add the requested templates at the begining
     with open(path, 'r+') as file :

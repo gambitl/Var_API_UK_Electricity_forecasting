@@ -2,9 +2,30 @@ import pandas as pd
 from bokeh.plotting import figure, output_file, save
 from bokeh.layouts import gridplot, row
 from bokeh.models import Range1d
+import os
+import gcsfs
+
+#defining the gcp path
+gcs = gcsfs.GCSFileSystem(project='formation-mle-dev')
+artefacts_bucket = 'dataset-projet-mle-var-forecasting'
+folder_data = 'data_for_training_and_predict'
+folder_model = 'models'
+gs_path = 'gs://'
+bucket_name = artefacts_bucket
+
+current_directory = os.getcwd()
+
+#df on GCS path
+nom_df = 'historic_demand_2009_2023_noNaN.csv'
+path_df = os.path.join(gs_path,bucket_name, folder_data, nom_df).replace('\\','/')
+
+relative_path_template = "templates"
+full_path_template = os.path.join(current_directory, relative_path_template)
 
 #Creation and formatting of the DataFrame
-df = pd.read_csv('../database/database.csv')
+df = pd.read_csv(path_df)
+
+
 weekday=pd.to_datetime(df['settlement_date']).dt.weekday
 day=pd.to_datetime(df['settlement_date']).dt.day
 month=pd.to_datetime(df['settlement_date']).dt.month
@@ -43,7 +64,7 @@ def create_nd_list(duration):
 
 #Plot the evolution of ND during the selected time period using Bokeh
 def plot_time_period(list_index, list_nd, duration):
-    output_file(filename ="../templates/graph_time_period.html", title ="Static HTML file")
+    output_file(filename =full_path_template+"/graph_time_period.html", title ="Static HTML file")
     p = figure(sizing_mode="stretch_width", max_width=9000, height=500, title=duration)
     line = p.line(list_index, list_nd)
     save(p)
@@ -112,7 +133,7 @@ def plot_features_effect(feature):
     for i in figures:
         list_figures.append(figures[i])
     #save the boxplots in a html file
-    output_file(filename ="../../templates/graph_feature.html", title ="Static HTML file")
+    output_file(filename =full_path_template+"/graph_feature.html", title ="Static HTML file")
     save(row(list_figures))
 
      #"unexpected attribute 'plot_width' to figure, similar attributes are outer_width, width or min_width"
