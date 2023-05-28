@@ -38,7 +38,7 @@ La pipeline est rigoureusement testée pour assurer la qualité des prédictions
 4. 🖥️ Créez une machine virtuelle sur Google Cloud Compute Engine et configurez l'environnement MLFlow.
 5. 🗃️ Créez une base de données PostgreSQL pour stocker les données de MLFlow et configurez les paramètres de connexion dans le code. Exécutez les deux commandes suivantes pour créer un proxy entre la base et la VM, puis créer un pont :
    1. ./cloud-sql-proxy --private-ip *nom-du-projet*:*nom-de-la-bdd*
-   2. mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri postgresql://*nom-de-l'instance-postgre*:*mot-de-passe-de-lubstance*@*adresse-sur-laquelle-ecoute-le-proxy*:5432/mlfflow_db --default-artifact-root gs://*nom-bucket-storageartifact*
+   2. mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri postgresql://*nom-de-l'instance-postgre*:*mot-de-passe-de-linstance*@*adresse-sur-laquelle-ecoute-le-proxy*:5432/*nom-de-la-bdd* --default-artifact-root gs://*nom-bucket-storageartifact*
 6. 🔄 Mettez en place le DAG Airflow en important dans l'interface de Composer le fichier Python du DAG situé dans le dossier "dag_airflow" du projet.
 7. 🚢 Construisez le container Docker grâce à la brique Google Cloud Build (vous pouvez configurez une CI automatique en liant votre repo GIT comme nous l'avons fait) et déployez-le sur Google Cloud Run.
 
