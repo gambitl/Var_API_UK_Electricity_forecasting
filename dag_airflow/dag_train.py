@@ -16,6 +16,8 @@ from airflow.operators.python import PythonOperator
 import os 
 import gcsfs
 
+import time
+
 
 os.environ["GCLOUD_PROJECT"] = "formation-mle-dev"
 #defining the gcp path
@@ -54,6 +56,8 @@ def inv_diff(df_orig, df_forecast, n_jour_cible, second_diff = False):
     return df_fc_inv
 
 def train_model():
+    #allow the connexion to take effect
+    time.sleep(360)
     #mlflow param
     tracking_server_host = "34.163.234.198"
     mlflow.set_tracking_uri(f"http://{tracking_server_host}:5000")
@@ -136,8 +140,10 @@ connexion_proxy = SSHOperator(
           use_oslogin=False,
           use_iap_tunnel=False,
           use_internal_ip=True),
-    command="./cloud-sql-proxy --private-ip formation-mle-dev:europe-west9:mlflow-postgres-database; exit 99",
+    command="./cloud-sql-proxy --private-ip formation-mle-dev:europe-west9:mlflow-postgres-database",
     retries=0,
+    cmd_timeout = 72000,
+    conn_timeout = 7200,
     dag = my_dag_train
 )
 
@@ -147,5 +153,3 @@ training_task = PythonOperator(
     python_callable=train_model,
     trigger_rule="none_skipped"
 )
-
-connexion_proxy >> training_task
